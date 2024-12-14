@@ -1,0 +1,18 @@
+{
+  "name": "corebranch/atproto-core",
+  "description": "Core component of ATProto SDK",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "ATProto\\Core\\": "src/",
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=8.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  }
+}

@@ -46,7 +46,8 @@ class Base32Test extends TestCase
 
     public function testDecodeWithInvalidCharactersThrowsException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Invalid Base32 encoded data.');
         Base32::decode('INVALID@CHAR!');
     }
 

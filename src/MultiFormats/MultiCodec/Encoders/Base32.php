@@ -12,6 +12,7 @@
 namespace ATProto\Core\MultiFormats\MultiCodec\Encoders;
 
 use ATProto\Core\MultiFormats\Interfaces\EncoderInterface;
+use ValueError;
 
 /**
  * Class Base32
@@ -43,9 +44,9 @@ class Base32 implements EncoderInterface
     public static function encode(string $data): string
     {
         // Convert the string into a binary representation
-        $binaryString = array_reduce(str_split($data), static function (?string $binaryString, string $char): string {
-            return $binaryString . str_pad(
-                    decbin(ord($char)),
+        $binaryString = \array_reduce(\str_split($data), static function (?string $binaryString, string $char): string {
+            return $binaryString . \str_pad(
+                    \decbin(\ord($char)),
                     8,
                     '0',
                     STR_PAD_LEFT
@@ -53,19 +54,19 @@ class Base32 implements EncoderInterface
         });
 
         // Split the binary string into 5-bit chunks and encode each chunk
-        $encoded = array_reduce(str_split($binaryString, 5), static function (?string $encoded, string $block): string {
-            if (strlen($block) < 5) {
-                $block = str_pad($block, 5, '0');
+        $encoded = \array_reduce(\str_split($binaryString, 5), static function (?string $encoded, string $block): string {
+            if (\strlen($block) < 5) {
+                $block = \str_pad($block, 5, '0');
             }
 
-            return $encoded . self::BASE32_ALPHABET[bindec($block)];
+            return $encoded . self::BASE32_ALPHABET[\bindec($block)];
         });
 
         // Padding function to append '=' for incomplete groups
-        $fill = static fn (int $len) => str_repeat('=', $len);
+        $fill = static fn (int $len) => \str_repeat('=', $len);
 
         // Determine and apply padding as per RFC 4648
-        return $encoded . match (strlen($binaryString) % 40) {
+        return $encoded . match (\strlen($binaryString) % 40) {
                 0  => '',
                 8  => $fill(6),
                 16 => $fill(4),
@@ -80,10 +81,42 @@ class Base32 implements EncoderInterface
      * @param  string  $data Base32-encoded input string.
      * @return string  Decoded original data.
      *
-     * @todo Implement the decode method.
+     * @throws ValueError If the input string contains invalid Base32 characters.
      */
     public static function decode(string $data): string
     {
-        // TODO: Implement decode() method.
+        // Validate input: Allow only Base32 characters (A-Z, 2-7) with optional padding ('=')
+        if (! \preg_match('/^[A-Z2-7]+=*$/', $data)) {
+            throw new ValueError("Invalid Base32 encoded data.");
+        }
+
+        $map = \array_flip(self::BASE32_ALPHABET);
+
+        // Remove padding characters ('=') from the input
+        $data = \rtrim($data, '=');
+
+        // Convert each character to its 5-bit binary representation
+        $binaryString = \array_reduce(
+            \str_split($data),
+            static function (string $binaryString, string $char) use ($map): string {
+                return $binaryString . \str_pad(
+                        \decbin($map[$char]), // Map character to 5-bit binary
+                        5,
+                        '0',
+                        STR_PAD_LEFT
+                    );
+            },
+            initial: ''
+        );
+
+        // Combine binary groups into 8-bit chunks and decode to original characters
+        return \array_reduce(\str_split($binaryString, 8), static function (string $decoded, string $block): string {
+                if (\strlen($block) === 8) { // Process only complete 8-bit blocks
+                    $decoded .= \chr(\bindec($block));
+                }
+                return $decoded;
+            },
+            initial: ''
+        );
     }
 }

@@ -9,7 +9,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-namespace MultiFormats\MultiCodec\Encoders;
+namespace Tests\Unit\MultiFormats\MultiCodec\Encoders;
 
 use ATProto\Core\MultiFormats\Interfaces\EncoderInterface;
 use ATProto\Core\MultiFormats\MultiCodec\Encoders\Base32;

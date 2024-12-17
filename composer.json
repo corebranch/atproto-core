@@ -2,6 +2,7 @@
   "name": "corebranch/atproto-core",
   "description": "Core component of ATProto SDK",
   "type": "library",
+  "minimum-stability": "stable",
   "license": "MIT",
   "autoload": {
     "psr-4": {

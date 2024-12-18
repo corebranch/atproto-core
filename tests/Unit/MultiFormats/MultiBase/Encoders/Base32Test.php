@@ -55,6 +55,7 @@ class Base32Test extends TestCase
     public static function provideValidEncodeCases(): array
     {
         return [
+            ['', ''],
             ['f', 'MY'],
             ['fo', 'MZXQ'],
             ['foo', 'MZXW6'],
@@ -67,6 +68,7 @@ class Base32Test extends TestCase
     public static function provideValidDecodeCases(): array
     {
         return [
+            ['', ''],
             ['MY======', 'f'],
             ['MZXQ====', 'fo'],
             ['MZXW6===', 'foo'],

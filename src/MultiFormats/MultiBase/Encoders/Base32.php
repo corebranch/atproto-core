@@ -43,6 +43,10 @@ class Base32 implements EncoderInterface
      */
     public static function encode(string $data): string
     {
+        if ($data === '') {
+            return $data;
+        }
+
         // Convert the string into a binary representation
         $binaryString = \array_reduce(\str_split($data), static function (?string $binaryString, string $char): string {
             return $binaryString . \str_pad(
@@ -79,6 +83,10 @@ class Base32 implements EncoderInterface
      */
     public static function decode(string $data): string
     {
+        if ($data === '') {
+            return $data;
+        }
+
         // Validate input: Allow only Base32 characters (A-Z, 2-7) with optional padding ('=')
         if (! \preg_match('/^[A-Z2-7]+=*$/', $data)) {
             throw new ValueError("Invalid Base32 encoded data.");

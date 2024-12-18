@@ -55,12 +55,12 @@ class Base32Test extends TestCase
     public static function provideValidEncodeCases(): array
     {
         return [
-            ['f', 'MY======'],
-            ['fo', 'MZXQ===='],
-            ['foo', 'MZXW6==='],
-            ['foob', 'MZXW6YQ='],
+            ['f', 'MY'],
+            ['fo', 'MZXQ'],
+            ['foo', 'MZXW6'],
+            ['foob', 'MZXW6YQ'],
             ['fooba', 'MZXW6YTB'],
-            ['foobar', 'MZXW6YTBOI======'],
+            ['foobar', 'MZXW6YTBOI'],
         ];
     }
 

@@ -66,13 +66,7 @@ class Base32 implements EncoderInterface
         $fill = static fn (int $len) => \str_repeat('=', $len);
 
         // Determine and apply padding as per RFC 4648
-        return $encoded . match (\strlen($binaryString) % 40) {
-                0  => '',
-                8  => $fill(6),
-                16 => $fill(4),
-                24 => $fill(3),
-                32 => $fill(1),
-            };
+        return $encoded;
     }
 
     /**

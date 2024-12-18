@@ -9,7 +9,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-namespace ATProto\Core\MultiFormats\MultiCodec\Encoders;
+namespace ATProto\Core\MultiFormats\MultiBase\Encoders;
 
 use ATProto\Core\MultiFormats\Interfaces\EncoderInterface;
 use ValueError;

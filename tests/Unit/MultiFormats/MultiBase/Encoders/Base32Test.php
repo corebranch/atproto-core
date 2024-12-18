@@ -9,10 +9,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-namespace Tests\Unit\MultiFormats\MultiCodec\Encoders;
+namespace Tests\Unit\MultiFormats\MultiBase\Encoders;
 
 use ATProto\Core\MultiFormats\Interfaces\EncoderInterface;
-use ATProto\Core\MultiFormats\MultiCodec\Encoders\Base32;
+use ATProto\Core\MultiFormats\MultiBase\Encoders\Base32;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

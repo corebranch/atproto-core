@@ -17,16 +17,16 @@ class MultiHash
         MultiCodecEnum::SHA2_256->name => 'sha256',
     ];
 
-    public static function generate(string $data): string
+    public static function generate(string $data, MultiCodecEnum $hashAlgo = MultiCodecEnum::SHA2_256): string
     {
         if (empty($data)) {
             throw new \ValueError("Data cannot be empty.");
         }
 
-        $hash = \hash(self::ALGO_ALIASES_MAP_BY_MULTICODEC[MultiCodecEnum::SHA2_256->name], $data, true);
+        $hash = \hash(self::ALGO_ALIASES_MAP_BY_MULTICODEC[$hashAlgo->name], $data, true);
 
         return \sprintf("%s%s%s",
-            \chr(MultiCodecEnum::SHA2_256->value),
+            \chr($hashAlgo->value),
             \chr(\strlen($hash)),
             $hash
         );

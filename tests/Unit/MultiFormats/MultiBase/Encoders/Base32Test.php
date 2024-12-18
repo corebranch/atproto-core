@@ -56,12 +56,12 @@ class Base32Test extends TestCase
     {
         return [
             ['', ''],
-            ['f', 'MY'],
-            ['fo', 'MZXQ'],
-            ['foo', 'MZXW6'],
-            ['foob', 'MZXW6YQ'],
-            ['fooba', 'MZXW6YTB'],
-            ['foobar', 'MZXW6YTBOI'],
+            ['f', 'bmy'],
+            ['fo', 'bmzxq'],
+            ['foo', 'bmzxw6'],
+            ['foob', 'bmzxw6yq'],
+            ['fooba', 'bmzxw6ytb'],
+            ['foobar', 'bmzxw6ytboi'],
         ];
     }
 
@@ -69,12 +69,30 @@ class Base32Test extends TestCase
     {
         return [
             ['', ''],
-            ['MY======', 'f'],
-            ['MZXQ====', 'fo'],
-            ['MZXW6===', 'foo'],
-            ['MZXW6YQ=', 'foob'],
-            ['MZXW6YTB', 'fooba'],
-            ['MZXW6YTBOI======', 'foobar'],
+            ['BMY======', 'f'],
+            ['BMZXQ====', 'fo'],
+            ['BMZXW6===', 'foo'],
+            ['BMZXW6YQ=', 'foob'],
+            ['BMZXW6YTB', 'fooba'],
+            ['BMZXW6YTBOI======', 'foobar'],
+            ['BMY', 'f'],
+            ['BMZXQ', 'fo'],
+            ['BMZXW6', 'foo'],
+            ['BMZXW6YQ', 'foob'],
+            ['BMZXW6YTB', 'fooba'],
+            ['BMZXW6YTBOI', 'foobar'],
+            ['bmy======', 'f'],
+            ['bmzxq====', 'fo'],
+            ['bmzxw6===', 'foo'],
+            ['bmzxw6yq=', 'foob'],
+            ['bmzxw6ytb', 'fooba'],
+            ['bmzxw6ytboi======', 'foobar'],
+            ['bmy', 'f'],
+            ['bmzxq', 'fo'],
+            ['bmzxw6', 'foo'],
+            ['bmzxw6yq', 'foob'],
+            ['bmzxw6ytb', 'fooba'],
+            ['bmzxw6ytboi', 'foobar'],
         ];
     }
 }

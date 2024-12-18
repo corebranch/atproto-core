@@ -35,6 +35,8 @@ class Base32 implements EncoderInterface
         2, 3, 4, 5, 6, 7
     ];
 
+    public const string PREFIX = 'b';
+
     /**
      * Encodes the given string data into Base32 format.
      *
@@ -66,11 +68,7 @@ class Base32 implements EncoderInterface
             return $encoded . self::BASE32_ALPHABET[\bindec($block)];
         });
 
-        // Padding function to append '=' for incomplete groups
-        $fill = static fn (int $len) => \str_repeat('=', $len);
-
-        // Determine and apply padding as per RFC 4648
-        return $encoded;
+        return strtolower(self::PREFIX . $encoded);
     }
 
     /**
@@ -88,7 +86,7 @@ class Base32 implements EncoderInterface
         }
 
         // Validate input: Allow only Base32 characters (A-Z, 2-7) with optional padding ('=')
-        if (! \preg_match('/^[A-Z2-7]+=*$/', $data)) {
+        if (! \preg_match('/^[A-Za-z2-7]+=*$/', $data)) {
             throw new ValueError("Invalid Base32 encoded data.");
         }
 
@@ -97,10 +95,14 @@ class Base32 implements EncoderInterface
         // Remove padding characters ('=') from the input
         $data = \rtrim($data, '=');
 
+        // Remove prefix ('B')
+        $data = substr($data, 1);
+
+        // For case-insensitive
+        $data = strtoupper($data);
+
         // Convert each character to its 5-bit binary representation
-        $binaryString = \array_reduce(
-            \str_split($data),
-            static function (string $binaryString, string $char) use ($map): string {
+        $binaryString = \array_reduce(\str_split($data), static function (string $binaryString, string $char) use ($map): string {
                 return $binaryString . \str_pad(
                         \decbin($map[$char]), // Map character to 5-bit binary
                         5,

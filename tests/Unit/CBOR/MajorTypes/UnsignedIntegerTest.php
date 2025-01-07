@@ -35,6 +35,34 @@ class UnsignedIntegerTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testEncodeThrowsAnExceptionForValueGreaterThanIntMax(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage("Invalid CBOR data: Decoded value is negative, which is not valid for unsigned integers.");
+
+        UnsignedInteger::decode("\x1B\x80\x00\x00\x00\x00\x00\x00\x00"); // PHP_INT_MAX + 1
+    }
+
+    #[DataProvider('provideNegativeCases')]
+    public function testDecodeThrowsAnExceptionWhenPassedInvalidValue(string $case): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage("Invalid major type for unsigned integer: ");
+
+        UnsignedInteger::decode($case);
+    }
+
+    public static function provideNegativeCases(): array
+    {
+        $arr = [];
+
+        for ($i = -1; $i >= -100; $i--) {
+            $arr[] = [hex2bin(dechex($i))];
+        }
+
+        return $arr;
+    }
+
     public static function provideCases(): iterable
     {
         return [

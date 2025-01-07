@@ -25,20 +25,22 @@ class UnsignedInteger
             throw new ValueError("Invalid major type for unsigned integer: $majorType");
         }
 
-        $offset = 1;
-
         if ($additionalInfo <= 23) {
             $value = $additionalInfo;
         } elseif ($additionalInfo === 24) {
-            $value = ord($data[$offset]);
+            $value = ord($data[1]);
         } elseif ($additionalInfo === 25) {
-            $value = unpack('n', substr($data, $offset, 2))[1];
+            $value = unpack('n', substr($data, 1, 2))[1];
         } elseif ($additionalInfo === 26) {
-            $value = unpack('N', substr($data, $offset, 4))[1];
+            $value = unpack('N', substr($data, 1, 4))[1];
         } elseif ($additionalInfo === 27) {
-            $value = unpack('J', substr($data, $offset, 8))[1];
+            $value = unpack('J', substr($data, 1, 8))[1];
         } else {
             throw new ValueError("Invalid additional information for unsigned integer: $additionalInfo");
+        }
+
+        if ($value < 0) {
+            throw new ValueError("Invalid CBOR data: Decoded value is negative, which is not valid for unsigned integers.");
         }
 
         return $value;

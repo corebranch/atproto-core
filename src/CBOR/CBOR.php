@@ -11,15 +11,23 @@
 
 namespace ATProto\Core\CBOR;
 
+use ATProto\Core\CBOR\MajorTypes\UnsignedInteger;
+
 class CBOR
 {
-    public static function encode(array $data): string
+    public static function encode(string|int|array $data): string
     {
-        // TODO
+        switch (gettype($data)) {
+            case 'integer':
+                return UnsignedInteger::encode($data);
+            break;
+        }
+
+        throw new \ValueError("Unsupported type: " . gettype($data));
     }
 
-    public static function decode(string $data): string
+    public static function decode(string $data): int
     {
-        // TODO
+        return UnsignedInteger::decode((string) $data);
     }
 }

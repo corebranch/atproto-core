@@ -113,3 +113,7 @@ fabric.properties
 /build/
 
 # End of https://www.toptal.com/developers/gitignore/api/phpstorm+all,composer,phpunit
+
+# For https://github.com/nektos/act
+.secrets
+.variables

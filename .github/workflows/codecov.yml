@@ -3,7 +3,7 @@ name: Codecov
 on: [push]
 
 jobs:
-  build-test:
+  codecov:
     runs-on: ubuntu-latest
 
     steps:
@@ -11,28 +11,30 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Install composer and dependencies
-        uses: php-actions/composer@v6
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: xdebug
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: PHPUnit Tests
-        uses: php-actions/phpunit@v3
-        env:
-          XDEBUG_MODE: coverage
-        with:
-          bootstrap: vendor/autoload.php
-          configuration: phpunit.xml
-          php_extensions: xdebug
-          args: tests --coverage-clover ./coverage.xml
+        run: vendor/bin/phpunit --bootstrap vendor/autoload.php --configuration ./phpunit.xml --coverage-clover ./coverage.xml
 
       - name: Upload to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODE_COV_TOKEN }}
           files: ./coverage.xml

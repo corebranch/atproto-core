@@ -17,27 +17,27 @@ use PHPUnit\Framework\TestCase;
 
 class TextStringTest extends TestCase
 {
-    #[DataProvider('provideCases')]
-    public function testItCanEncodeCorrectly(string $case, string $header): void
+    #[DataProvider('provideValidCases')]
+    public function testEncodeProducesCorrectCBORRepresentation(string $input, string $expectedHeader): void
     {
-        $actual = bin2hex(TextString::encode($case));
-        $expected = bin2hex($header . $case);
+        $actual = bin2hex(TextString::encode($input));
+        $expected = bin2hex($expectedHeader . $input);
 
         $this->assertSame($expected, $actual);
     }
 
-    #[DataProvider('provideCases')]
-    public function testItCanDecodeCorrectly(string $case, string $header): void
+    #[DataProvider('provideValidCases')]
+    public function testDecodeExtractsOriginalStringFromCBORRepresentation(string $input, string $header): void
     {
-        $target = $header . $case;
+        $encoded = $header . $input;
 
-        $actual = TextString::decode($target);
-        $expected = $case;
+        $actual = TextString::decode($encoded);
+        $expected = $input;
 
         $this->assertSame($expected, $actual);
     }
 
-    public static function provideCases(): array
+    public static function provideValidCases(): array
     {
         return [
             ["f", "\x61"],
@@ -53,5 +53,31 @@ class TextStringTest extends TestCase
                 "\x79\x01\x4D"
             ]
         ];
+    }
+
+    public function testDecodeThrowsExceptionForInvalidMajorType(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage("Invalid CBOR TextString major type.");
+
+        TextString::decode("\x0C");
+    }
+
+    public function testDecodeThrowsExceptionForLengthMismatch(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage("Invalid CBOR TextString length mismatch.");
+
+        // Encoded length is 5, but actual length is 4
+        TextString::decode("\x65\x66\x6F\x6F\x62");
+    }
+
+    public function testDecodeThrowsExceptionForInvalidAdditionalInformation(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage("Invalid CBOR TextString length information.");
+
+        // Additional info 28 is invalid for text strings
+        TextString::decode("\x7C\x01");
     }
 }

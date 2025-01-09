@@ -34,14 +34,11 @@ class TextString
 
     public static function decode(string $input): string
     {
-        $initialByte = ord($input[0]);
-        $majorType = ($initialByte >> 5) & 0x07;
-
-        if ($majorType !== 0x03) {
+        if (! self::validate($input)) {
             throw new \ValueError('Invalid CBOR TextString major type.');
         }
 
-        $additionalInfo = $initialByte & 0x1F;
+        $additionalInfo = ord($input[0]) & 0x1F;
         $offset = 1;
 
         if ($additionalInfo <= 23) {
@@ -69,5 +66,10 @@ class TextString
         }
 
         return $text;
+    }
+
+    public static function validate(string $input): bool
+    {
+        return ((ord($input[0]) >> 5) & 0x07) === 0x03;
     }
 }

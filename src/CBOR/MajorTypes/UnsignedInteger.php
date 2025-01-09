@@ -17,13 +17,11 @@ class UnsignedInteger
 {
     public static function decode(string $data): int
     {
-        $firstByte = ord($data[0]);
-        $majorType = ($firstByte >> 5) & 0x07;
-        $additionalInfo = $firstByte & 0x1F;
-
-        if ($majorType !== 0) {
-            throw new ValueError("Invalid major type for unsigned integer: $majorType");
+        if (! self::validate($data)) {
+            throw new ValueError("Invalid major type for unsigned integer.");
         }
+
+        $additionalInfo = ord($data[0]) & 0x1F;
 
         if ($additionalInfo <= 23) {
             $value = $additionalInfo;
@@ -72,5 +70,10 @@ class UnsignedInteger
         }
 
         return $prefixedPack('J', "\x1B");
+    }
+
+    public static function validate(string $input): bool
+    {
+        return ((ord($input[0]) >> 5) & 0x07) === 0x00;
     }
 }

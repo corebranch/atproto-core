@@ -30,8 +30,16 @@ class CBOR
         throw new \ValueError("Unsupported type: " . gettype($data));
     }
 
-    public static function decode(string $data): int
+    public static function decode(string $data): int|string
     {
-        // TODO
+        if (TextString::validate($data)) {
+            return TextString::decode($data);
+        }
+
+        if (UnsignedInteger::validate($data)) {
+            return UnsignedInteger::decode($data);
+        }
+
+        throw new \ValueError("Unsupported type");
     }
 }

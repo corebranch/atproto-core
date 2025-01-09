@@ -18,18 +18,34 @@ use PHPUnit\Framework\TestCase;
 class CBORTest extends TestCase
 {
     #[DataProvider('validCases')]
-    public function testEncode(int $data, string $expected): void
+    public function testEncode(int|string $data, string $expected): void
     {
         $encoded = CBOR::encode($data);
         $this->assertSame($expected, $encoded);
     }
 
     #[DataProvider('validCases')]
-    public function testDecode(int $expected, string $data): void
+    public function testDecode(int|string $expected, string $data): void
     {
         $actual = CBOR::decode($data);
 
         $this->assertSame($expected, $actual);
+    }
+
+    public function testCBORDecodeThrowsExceptionWhenPassedUnsupportedType(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Unsupported type.');
+
+        CBOR::decode("\x80"); // CBOR array
+    }
+
+    public function testCBOREncodeThrowsExceptionWhenPassedUnsupportedType(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Unsupported type: array');
+
+        CBOR::encode(array());
     }
 
     /**
@@ -42,8 +58,8 @@ class CBORTest extends TestCase
             [1, hex2bin('01')], // 1 encoded as CBOR unsigned integer
             [10, hex2bin('0a')], // 10 encoded as CBOR unsigned integer
 
-//            // String test cases
-//            [['hello'], hex2bin('6568656c6c6f')], // "hello" encoded as CBOR text string
+            // String test cases
+            ['hello', hex2bin('6568656C6C6F')], // "hello" encoded as CBOR text string
 //
 //            // Boolean test cases
 //            [[true], hex2bin('f5')], // true encoded as CBOR special type

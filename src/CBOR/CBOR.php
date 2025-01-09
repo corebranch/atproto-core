@@ -11,6 +11,7 @@
 
 namespace ATProto\Core\CBOR;
 
+use ATProto\Core\CBOR\MajorTypes\TextString;
 use ATProto\Core\CBOR\MajorTypes\UnsignedInteger;
 
 class CBOR
@@ -21,13 +22,24 @@ class CBOR
             case 'integer':
                 return UnsignedInteger::encode($data);
             break;
+            case 'string':
+                return TextString::encode($data);
+            break;
         }
 
         throw new \ValueError("Unsupported type: " . gettype($data));
     }
 
-    public static function decode(string $data): int
+    public static function decode(string $data): int|string
     {
-        return UnsignedInteger::decode((string) $data);
+        if (TextString::validate($data)) {
+            return TextString::decode($data);
+        }
+
+        if (UnsignedInteger::validate($data)) {
+            return UnsignedInteger::decode($data);
+        }
+
+        throw new \ValueError("Unsupported type.");
     }
 }

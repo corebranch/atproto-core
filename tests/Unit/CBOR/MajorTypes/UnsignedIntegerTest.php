@@ -47,7 +47,7 @@ class UnsignedIntegerTest extends TestCase
     public function testDecodeThrowsAnExceptionWhenPassedInvalidValue(string $case): void
     {
         $this->expectException(\ValueError::class);
-        $this->expectExceptionMessage("Invalid major type for unsigned integer: ");
+        $this->expectExceptionMessage("Invalid major type for unsigned integer.");
 
         UnsignedInteger::decode($case);
     }

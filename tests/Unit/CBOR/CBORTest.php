@@ -32,6 +32,22 @@ class CBORTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testCBORDecodeThrowsExceptionWhenPassedUnsupportedType(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Unsupported type.');
+
+        CBOR::decode("\x80"); // CBOR array
+    }
+
+    public function testCBOREncodeThrowsExceptionWhenPassedUnsupportedType(): void
+    {
+        $this->expectException(\ValueError::class);
+        $this->expectExceptionMessage('Unsupported type: array');
+
+        CBOR::encode(array());
+    }
+
     /**
      * @return array[]
      */

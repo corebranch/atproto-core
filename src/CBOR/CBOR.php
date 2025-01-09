@@ -40,6 +40,6 @@ class CBOR
             return UnsignedInteger::decode($data);
         }
 
-        throw new \ValueError("Unsupported type");
+        throw new \ValueError("Unsupported type.");
     }
 }

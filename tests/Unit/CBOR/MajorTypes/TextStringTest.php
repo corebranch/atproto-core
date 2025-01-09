@@ -47,6 +47,10 @@ class TextStringTest extends TestCase
             ["fooba", "\x65"],
             ["foobar", "\x66"],
             [
+                "This is a longer string. This is a longer string. This is a longer string. This is a longer string.",
+                "\x78\x63"
+            ],
+            [
                 "This is a longer string. This is a longer string. This is a longer string. This is a longer string. 
                 This is a longer string. This is a longer string. This is a longer string. This is a longer string. 
                 This is a longer string. This is a longer string. This is a longer string. This is a longer string.",
